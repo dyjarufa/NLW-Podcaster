@@ -60,12 +60,12 @@
        .slider {
         flex: 1;
 
-        .emptySlider{
-          width: 100%;
-          height: 4px;
-          background: var(--purple-300);
-          border-radius: 2px;
-        }
+          .emptySlider{
+            width: 100%;
+            height: 4px;
+            background: var(--purple-300);
+            border-radius: 2px;
+          }
        }
 
   }
@@ -75,7 +75,7 @@
     align-items: center;
     justify-content: center;
     margin-top:2.5rem;
-    gap: 1.5rem;
+    gap: 1.5rem; //espaçamento entre os butões / usado com grid, colum, row
 
     button {
       background: transparent;
