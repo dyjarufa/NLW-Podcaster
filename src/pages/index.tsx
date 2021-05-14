@@ -8,7 +8,8 @@ import ptBR  from 'date-fns/locale/pt-BR';
 import { convertDurationToTimeString } from '../utils/convertDurationToTimeString';
 
 import styles from './home.module.scss';
-import React from 'react';
+import { useContext } from 'react';
+import { PlayerContext } from '../context/PlayerContext';
 
 type Episodes = {
   id: string,
@@ -27,6 +28,9 @@ type HomeProps = {
 }
 
 export default function Home({latestEpisodes, allEpisodes}: HomeProps) {
+
+  const { play } = useContext(PlayerContext);
+
   return (
     <div className={styles.homepage}>
       <section className={styles.latestEpisodes}>
@@ -53,7 +57,7 @@ export default function Home({latestEpisodes, allEpisodes}: HomeProps) {
                   <span>{episode.durationAsString}</span>
                 </div>
 
-                <button type="button">
+                <button type="button" onClick={() => play(episode)}>
                   <img src="/play-green.svg" alt="Tocar Episódio"/>
                 </button>
 
@@ -99,7 +103,7 @@ export default function Home({latestEpisodes, allEpisodes}: HomeProps) {
                     <td style={{width: '100px'}}>{episode.publishedAt}</td>
                     <td>{episode.durationAsString}</td>
                     <td>
-                      <button type="button">
+                      <button type="button" onClick={() => play(episode)}>
                         <img src="/play-green.svg" alt="Tocar episódio"/>
                       </button>
                     </td>
@@ -118,9 +122,9 @@ export const getStaticProps: GetStaticProps = async () => {
 
   const { data } = await api.get('episodes', {
     params: {
-      limit: 12,
-      sort: 'published_at',
-      order: 'desc'
+      _limit: 12,
+      _sort: 'published_at',
+      _order: 'desc'
     }
   })
 

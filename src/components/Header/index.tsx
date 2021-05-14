@@ -8,7 +8,6 @@ import styles from './styles.module.scss';
 
 export function Header() {
 
-  const player = useContext(PlayerContext)
 
   const currentDate = format(new Date(), 'EEEEEE, d, MMMM', {
     locale: ptBR
@@ -18,7 +17,7 @@ export function Header() {
     <header className={styles.headerContainer}>
       <img src="/logo.svg" alt="PodCaster"/>
 
-      <p>O melhor para você ouvir, sempre! {player}</p>
+      <p>O melhor para você ouvir, sempre!</p>
       <span>{currentDate}</span>
     </header>
   );

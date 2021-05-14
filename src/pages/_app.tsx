@@ -1,24 +1,35 @@
 /* Arquivo app é usado quando um preciso compartilhar um componente entre todas as telas da aplicação*/
 
+import { useState } from 'react';
+
 import { Header } from '../components/Header'
 import { Player } from '../components/Player';
+
+import { PlayerContext } from '../context/PlayerContext'
 
 import styles from  '../styles/app.module.scss';
 
 import '../styles/global.scss'
 
-import { PlayerContext } from '../context/PlayerContext'
-
 function MyApp({ Component, pageProps }) {
+
+  const [episodeList, setEpisodeList] = useState([]);
+  const [currentEpisodeIndex, setCurrentEpisodeIndex] = useState(0);
+
+  function play(episode) {
+    setEpisodeList([episode]);
+    setCurrentEpisodeIndex(0);
+  }
+
   return(
-    <PlayerContext.Provider value={"Jady"}>
-    <div className={styles.wrapper}>
-      <main>
-       <Header />
-       <Component {...pageProps} />
-      </main>
-      <Player />
-    </div>
+    <PlayerContext.Provider value={{episodeList, currentEpisodeIndex,  play}}>
+      <div className={styles.wrapper}>
+        <main>
+        <Header />
+        <Component {...pageProps} />
+        </main>
+        <Player />
+      </div>
     </PlayerContext.Provider>
   )
 }
