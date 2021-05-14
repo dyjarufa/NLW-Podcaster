@@ -7,9 +7,11 @@ import styles from  '../styles/app.module.scss';
 
 import '../styles/global.scss'
 
+import { PlayerContext } from '../context/PlayerContext'
 
 function MyApp({ Component, pageProps }) {
   return(
+    <PlayerContext.Provider value={"Jady"}>
     <div className={styles.wrapper}>
       <main>
        <Header />
@@ -17,6 +19,7 @@ function MyApp({ Component, pageProps }) {
       </main>
       <Player />
     </div>
+    </PlayerContext.Provider>
   )
 }
 
