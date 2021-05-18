@@ -10,6 +10,8 @@ import styles from './episode.module.scss';
 import Image from 'next/image';
 import Link from 'next/link';
 
+import { usePlayer } from '../../context/PlayerContext';
+
 type Episode = {
   id: string,
   title: string,
@@ -27,7 +29,8 @@ type EpisodeProps = {
 }
 
 export default function Episode({ episode }: EpisodeProps){
-  const router = useRouter();
+  
+  const { play } = usePlayer();
 
   return(
    <div className={styles.episode}>
@@ -44,7 +47,7 @@ export default function Episode({ episode }: EpisodeProps){
           src={episode.thumbnail}
           objectFit="cover"
         />
-        <button type="button">
+        <button type="button" onClick={() => play(episode)}>
           <img src="/play.svg" alt="Tocar Episódio"/>
         </button>
      </div>
@@ -89,7 +92,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
 }
 
 export const getStaticProps: GetStaticProps = async (ctx) => {
-  const {slug} = ctx.params;
+  const { slug } = ctx.params;
 
   const { data } = await api.get(`episodes/${slug}`)
 

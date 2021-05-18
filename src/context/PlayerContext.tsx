@@ -1,4 +1,4 @@
-import { createContext, ReactNode, useState } from "react";
+import { createContext, ReactNode, useContext, useState } from "react";
 
 type Episode = {
   title: string;
@@ -14,12 +14,17 @@ type PlayerContextData = {
   play: (episode: Episode) => void;
   isPlaying: boolean;
   setPlayingState: (state: boolean) => void;
-  togglePlay: () => void;
   playNext: () => void;
   playPreview: () => void;
   playList: (list: Episode[], index: number) => void;
+  togglePlay: () => void;
+  togleLoop: () => void;
+  toggleShuffle: () => void;
   hasNext: boolean;
   hasPreview: boolean;
+  isLooping: boolean;
+  isShuffling: boolean;
+
 };
 
 export const PlayerContext = createContext({} as PlayerContextData); //hack para forçar que meu objeto vazio é do tipo PlayerContextData
@@ -32,6 +37,8 @@ export function PlayerContextProvider({children}: PlayerContextProviderProps) {
    const [episodeList, setEpisodeList] = useState([]);
    const [currentEpisodeIndex, setCurrentEpisodeIndex] = useState(0);
    const [isPlaying, setIsPlaying] = useState(false);
+   const [isLooping, setIsLooping] = useState(false);
+   const [isShuffling, setIsShuffling] = useState(false);
 
    const hasNext = (currentEpisodeIndex + 1 ) <  episodeList.length;
    const hasPreview = currentEpisodeIndex > 0;
@@ -52,8 +59,20 @@ export function PlayerContextProvider({children}: PlayerContextProviderProps) {
      setIsPlaying(!isPlaying);
    }
 
+   function togleLoop(){
+     setIsLooping(!isLooping);
+   }
+
+   function toggleShuffle(){
+     setIsShuffling(!isShuffling);
+   }
+
    function playNext(){
-     if(hasNext){
+     if(isShuffling){ 
+      const nextRandomEpisodeIndex = Math.floor(Math.random() * episodeList.length);
+      setCurrentEpisodeIndex(nextRandomEpisodeIndex);
+
+     } else if(hasNext){
        setCurrentEpisodeIndex(currentEpisodeIndex + 1);
      }
    }
@@ -82,7 +101,11 @@ export function PlayerContextProvider({children}: PlayerContextProviderProps) {
           playList,
           setPlayingState,
           hasNext,
-          hasPreview
+          hasPreview,
+          isLooping,
+          isShuffling,
+          togleLoop,
+          toggleShuffle
         }}
         >
         {children}
@@ -91,3 +114,8 @@ export function PlayerContextProvider({children}: PlayerContextProviderProps) {
 
 }
 
+//Hack para otimizar a importação do Player Context 
+// Agora importo apenas o usePlayer, nos componentes que eu desejar
+export const usePlayer = () => {
+  return useContext(PlayerContext);
+}
