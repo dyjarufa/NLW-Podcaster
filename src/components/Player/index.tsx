@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import styles from './styles.module.scss';
 
 import { usePlayer } from '../../context/PlayerContext';
@@ -6,6 +6,7 @@ import Image from 'next/image';
 
 import Slider from 'rc-slider';
 import 'rc-slider/assets/index.css';
+import { convertDurationToTimeString } from '../../utils/convertDurationToTimeString';
 
 export function Player() {
 
@@ -29,6 +30,8 @@ export function Player() {
 
   const audioRef = useRef<HTMLAudioElement>(null)
 
+  const [progress, setProgress] = useState(0);
+
   useEffect(() => {
     if(!audioRef.current) {
       return;
@@ -43,6 +46,14 @@ export function Player() {
     }
 
   }, [isPlaying])
+
+  function setupProgressListener(){
+    audioRef.current.currentTime = 0; // toda vez que um novo episódio for executado, progresso será zerado
+
+    audioRef.current.addEventListener('timeupdate',() => { // fica escutando evento timeupdate(é atualizado a topo momento)
+      setProgress(Math.floor(audioRef.current.currentTime)); // seto o valor do currentTime que esta sendo atualizado no evento, defino esse valor no estado do progress
+    } )
+  }
 
   return(
     <div className={styles.playerContainer}>
@@ -71,10 +82,12 @@ export function Player() {
 
       <footer className={!episode ?  styles.empty : ''}>
         <div className={styles.progress}>
-          <span>00:00</span>
+          <span>{convertDurationToTimeString(progress)}</span>
           <div className={styles.slider}>
             {episode ? (
-              <Slider 
+              <Slider
+                max={episode.duration} /* tempo máximo que o slider pode percorrer */
+                value={progress} /* tempo atual que o slider esta percorrendo */
                 trackStyle={{ backgroundColor: '#04d361'}}
                 railStyle={{ backgroundColor: '#9f75ff'}}
                 handleStyle={{ borderColor: '#04d361', borderWidth: 4}}
@@ -83,7 +96,7 @@ export function Player() {
               <div className={styles.emptySlider} />
             )}
           </div>
-            <span>00:00</span>
+            <span>{convertDurationToTimeString(episode?.duration ?? 0)}</span>
           </div>
 
         {episode && (
@@ -94,6 +107,7 @@ export function Player() {
             autoPlay 
             onPlay={() => setPlayingState(true)}
             onPause={() => setPlayingState(false)}
+            onLoadedMetadata={setupProgressListener} /* evento que é disparado assim que o player conseguiu carregar os dados do episódio */
           />
         )}
 
