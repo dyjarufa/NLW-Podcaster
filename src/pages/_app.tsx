@@ -5,8 +5,6 @@ import { useState } from 'react';
 import { Header } from '../components/Header'
 import { Player } from '../components/Player';
 
-import { PlayerContext } from '../context/PlayerContext'
-
 import { PlayerContextProvider } from '../context/PlayerContext'   
 
 import styles from  '../styles/app.module.scss';

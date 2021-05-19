@@ -11,8 +11,10 @@ export default class MyDocument extends Document {
     return (
         <Html>
           <Head> {/* posso colorcar por exemplo as fontes que baixei */}
+             <link rel="icon" href="/favicon.ico"  />
             <link rel="preconnect" href="https://fonts.gstatic.com" />
             <link href="https://fonts.googleapis.com/css2?family=Inter&family=Lexend:wght@500;600&display=swap" rel="stylesheet" />
+
           </Head>
           <body>
             <Main /> {/* Main onde fica a aplicação */}

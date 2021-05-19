@@ -1,7 +1,8 @@
-import { GetStaticProps } from 'next'
-import Image from 'next/image'
-import { api } from '../services/api'
-import Link from 'next/link'
+import { GetStaticProps } from 'next';
+import Image from 'next/image';
+import { api } from '../services/api';
+import Link from 'next/link';
+import Head from 'next/head';
 
 import { format, parseISO } from 'date-fns';
 import ptBR  from 'date-fns/locale/pt-BR';
@@ -34,6 +35,9 @@ export default function Home({latestEpisodes, allEpisodes}: HomeProps) {
 
   return (
     <div className={styles.homepage}>
+    <Head>
+      <title>Home | Podcast</title>
+    </Head>
       <section className={styles.latestEpisodes}>
         <h2>Últimos Episódios</h2>
 
@@ -50,7 +54,7 @@ export default function Home({latestEpisodes, allEpisodes}: HomeProps) {
                 />
                 
                 <div className={styles.episodeDetails}>
-                  <Link href={`episodes/${episode.id}`}>
+                  <Link href={`/episodes/${episode.id}`}>
                     <a>{episode.title}</a>
                   </Link>
                   <p>{episode.members}</p>
@@ -96,7 +100,7 @@ export default function Home({latestEpisodes, allEpisodes}: HomeProps) {
                       />
                     </td>
                     <td>
-                      <Link href={`episodes/${episode.id}`}>
+                      <Link href={`/episodes/${episode.id}`}>
                         <a>{episode.title}</a>
                       </Link>
                     </td>
