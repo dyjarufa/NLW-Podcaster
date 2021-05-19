@@ -20,6 +20,7 @@ type PlayerContextData = {
   togglePlay: () => void;
   togleLoop: () => void;
   toggleShuffle: () => void;
+  clearPlayerState: () => void;
   hasNext: boolean;
   hasPreview: boolean;
   isLooping: boolean;
@@ -40,7 +41,8 @@ export function PlayerContextProvider({children}: PlayerContextProviderProps) {
    const [isLooping, setIsLooping] = useState(false);
    const [isShuffling, setIsShuffling] = useState(false);
 
-   const hasNext = (currentEpisodeIndex + 1 ) <  episodeList.length;
+   // lógica alterada quando estiver em modo aleatório
+   const hasNext = isShuffling || (currentEpisodeIndex + 1 ) <  episodeList.length 
    const hasPreview = currentEpisodeIndex > 0;
  
    function play(episode: Episode) {
@@ -82,6 +84,12 @@ export function PlayerContextProvider({children}: PlayerContextProviderProps) {
        setCurrentEpisodeIndex(currentEpisodeIndex - 1)
      }
    }
+
+   // Função criada para quando eu estiver em modo aleatório e não existir episódio eu limpo a minha lista
+   function clearPlayerState(){
+     setEpisodeList([]);
+     setCurrentEpisodeIndex(0);
+   }
  
    //Função criada para pegar o evento dos teclados multmidia de pause e play
    function setPlayingState(state: boolean) {
@@ -105,7 +113,8 @@ export function PlayerContextProvider({children}: PlayerContextProviderProps) {
           isLooping,
           isShuffling,
           togleLoop,
-          toggleShuffle
+          toggleShuffle,
+          clearPlayerState
         }}
         >
         {children}

@@ -23,7 +23,8 @@ export function Player() {
     isLooping,
     isShuffling,
     togleLoop,
-    toggleShuffle
+    toggleShuffle,
+    clearPlayerState
    } = usePlayer();
 
   const episode = episodeList[currentEpisodeIndex];
@@ -53,6 +54,19 @@ export function Player() {
     audioRef.current.addEventListener('timeupdate',() => { // fica escutando evento timeupdate(é atualizado a topo momento)
       setProgress(Math.floor(audioRef.current.currentTime)); // seto o valor do currentTime que esta sendo atualizado no evento, defino esse valor no estado do progress
     } )
+  }
+
+  function handleSlider(amount: number) { // essa função recebe como parâmetro o "amount"(já está integrado) que é o número(posição) que é bolinha foi manipulada;
+     audioRef.current.currentTime = amount;
+     setProgress(amount);
+  }
+
+  function handleEpisodeEnded(){
+    if(hasNext){
+      playNext()
+    }else{
+      clearPlayerState();
+    }
   }
 
   return(
@@ -88,6 +102,7 @@ export function Player() {
               <Slider
                 max={episode.duration} /* tempo máximo que o slider pode percorrer */
                 value={progress} /* tempo atual que o slider esta percorrendo */
+                onChange={handleSlider} /* evento disparada quando a bolinha é arrastada */
                 trackStyle={{ backgroundColor: '#04d361'}}
                 railStyle={{ backgroundColor: '#9f75ff'}}
                 handleStyle={{ borderColor: '#04d361', borderWidth: 4}}
@@ -104,6 +119,7 @@ export function Player() {
             src={episode.url}
             ref={audioRef}
             loop={isLooping}
+            onEnded={handleEpisodeEnded} /* função que é executada quando o audio chega no final */
             autoPlay 
             onPlay={() => setPlayingState(true)}
             onPause={() => setPlayingState(false)}
